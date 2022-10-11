@@ -4,7 +4,7 @@ function solution = gauss_maximal(A, b)
   solution = zeros(n, 0);
   perm = 1:n;
 
-  for k = 1:n#For thk k
+  for k = 1:n - 1
     #Look for max
       max = {k, k};
       for maxk = k:n
@@ -16,21 +16,14 @@ function solution = gauss_maximal(A, b)
         endfor
       endfor
 
-      #Check if max = 0 them continue to next due to no necessary to make 0's
-      if A(max{1}, max{2} == 0)
-        continue;
-      endif
-
       #Permute k
-      if max{1} ~= k
-        tmp = A(k, :);
-        A(k, :) = A(max{1}, :);
-        A(max{1}, :) = tmp;
+      tmp = A(k, :);
+      A(k, :) = A(max{1}, :);
+      A(max{1}, :) = tmp;
 
-        tmp = b(k);
-        b(k) = b(max{1});
-        b(max{1}) = tmp;
-      endif
+      tmp = b(k);
+      b(k) = b(max{1});
+      b(max{1}) = tmp;
 
       #Permute column
       tmp = A(:, k);
@@ -42,7 +35,7 @@ function solution = gauss_maximal(A, b)
       perm(k) = max{2};
       perm(max{2}) = tmp;
 
-    for i = k + 1:n #For thk cols to divide thk 'lmb'
+    for i = k + 1:n
       m = A(i, k) / A(k, k);
 
       #Loop to make zero's
