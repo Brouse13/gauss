@@ -1,53 +1,64 @@
-function solution = gauss_maximal(A, b)
+function [newA, newb, perm] = gauss_maximal(A, b)
   n = length(A);
 
   solution = zeros(n, 0);
-  perm = 1:n;
+  indexes = 1:n;
 
-  for k = 1:n - 1
+  for row = 1:n#For throw row
     #Look for max
-      max = {k, k};
-      for maxk = k:n
-        for maxCol = k:n
-          if abs(A(maxk, maxCol)) > abs(A(max{1}, max{2}))
-            max{1} = maxk;
+      max = {row, row};
+      for maxRow = row:n
+        for maxCol = row:n
+          if abs(A(maxRow, maxCol)) > abs(A(max{1}, max{2}))
+            max{1} = maxRow;
             max{2} = maxCol;
           endif
         endfor
       endfor
 
-      #Permute k
-      tmp = A(k, :);
-      A(k, :) = A(max{1}, :);
-      A(max{1}, :) = tmp;
+      #Check if max = 0 them continue to next due to no necessary to make 0's
+      if A(max{1}, max{2} == 0)
+        continue;
+      endif
 
-      tmp = b(k);
-      b(k) = b(max{1});
-      b(max{1}) = tmp;
+      #Permute row
+      if max{1} ~= row
+        tmp = A(row, :);
+        A(row, :) = A(max{1}, :);
+        A(max{1}, :) = tmp;
+
+        tmp = b(row);
+        b(row) = b(max{1});
+        b(max{1}) = tmp;
+      endif
 
       #Permute column
-      tmp = A(:, k);
-      A(:, k) = A(:, max{2});
-      A(:, max{2}) = tmp;
+      if max{2} != row
 
-      %Refelct column change
-      tmp = k;
-      perm(k) = max{2};
-      perm(max{2}) = tmp;
+        tmp = A(:, row);
+        A(:, row) = A(:, max{2});
+        A(:, max{2}) = tmp;
 
-    for i = k + 1:n
-      m = A(i, k) / A(k, k);
+        %Refelct column change
+        tmp = row;
+        indexes(row) = max{2};
+        indexes(max{2}) = tmp;
+      endif
+
+    for i = row + 1:n #For throw cols to divide throw 'lmb'
+      lmd = A(i, row) / A(row, row);
+      A(i, row) = 0;
 
       #Loop to make zero's
-      for j = k:n
-        A(i, j) = A(i, j) - (m * A(k, j));
+      for j = row + 1:n
+        A(i, j) = A(i, j) - (lmd * A(row, j));
       endfor
 
-      b(i) = b(i) - (m * b(k));
-    endfor#k + 1 use to make 0's
-  endfor#k
-  solution = upper_triangular_solver(A, b);
-
-  solution = reorder_solution(solution, perm);
+      b(i) = b(i) - (lmd * b(row));
+    endfor#Row + 1 use to make 0's
+  endfor#Row
+  newA = A;
+  newb = b;
+  perm = indexes;
 
 endfunction
