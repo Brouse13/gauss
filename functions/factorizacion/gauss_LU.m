@@ -1,5 +1,12 @@
 function [L, U] = gauss_LU(A)
- n = length(A);
+  n = length(A(1, :));
+  m = length(A(:, 1));
+
+  if n != m
+    print("La matriz debe de ser cuadrada");
+    return;
+  endif
+
  L = zeros(n, 0);
 
  for k = 1 : n - 1
