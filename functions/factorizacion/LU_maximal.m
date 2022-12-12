@@ -1,4 +1,4 @@
-function [L, U, P, Q] = gauss_maximal_LU(A)
+function [L, U, P, Q] = LU_maximal(A)
   n = length(A(1, :));
   m = length(A(:, 1));
 

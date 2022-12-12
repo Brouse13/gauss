@@ -1,4 +1,4 @@
-function [L, U] = gauss_LU(A)
+function [L, U] = LU_gauss(A)
   n = length(A(1, :));
   m = length(A(:, 1));
 

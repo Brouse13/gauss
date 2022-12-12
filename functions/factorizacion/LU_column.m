@@ -1,4 +1,4 @@
-function [L, U, P] = gauss_column_LU(A)
+function [L, U, P] = LU_column(A)
   n = length(A(1, :));
   m = length(A(:, 1));
 
